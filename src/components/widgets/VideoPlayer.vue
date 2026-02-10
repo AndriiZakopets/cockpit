@@ -128,6 +128,7 @@ import { storeToRefs } from 'pinia'
 import { computed, onBeforeMount, onBeforeUnmount, ref, toRefs, watch } from 'vue'
 
 import StatsForNerds from '@/components/VideoPlayerStatsForNerds.vue'
+import { useStreamConsumer } from '@/composables/useStreamConsumer'
 import { useAppInterfaceStore } from '@/stores/appInterface'
 import { useVideoStore } from '@/stores/video'
 import { useWidgetManagerStore } from '@/stores/widgetManager'
@@ -175,6 +176,8 @@ onBeforeMount(() => {
 const externalStreamId = computed(() => {
   return nameSelectedStream.value ? videoStore.externalStreamId(nameSelectedStream.value) : undefined
 })
+
+useStreamConsumer(externalStreamId)
 
 watch(
   () => videoStore.streamsCorrespondency,

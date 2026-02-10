@@ -1,9 +1,9 @@
 <template>
   <div class="widgets-view">
-    <div v-for="view in store.viewsToShow" :key="view.hash" class="widget-view">
+    <div v-if="store.currentView" :key="store.currentView.hash" class="widget-view">
       <div class="w-full h-full bg-slate-500 flex justify-center align-center">
         <div
-          v-if="view.widgets.isEmpty()"
+          v-if="store.currentView.widgets.isEmpty()"
           class="px-10 py-16 rounded-md flex flex-col justify-center align-center bg-slate-400 font-extrabold text-slate-600 w-[480px] text-center text-3xl"
         >
           <p>You currently have no widgets!</p>
@@ -11,30 +11,10 @@
           <p>Open edit mode to start tweaking this view.</p>
         </div>
       </div>
+
       <SnappingGrid v-if="store.snapToGrid && store.editingMode" :grid-interval="store.gridInterval" />
-      <!-- Ghost preview for widget being dragged -->
-      <div
-        v-if="store.widgetDragState.widget && store.widgetDragState.position && store.editingMode"
-        class="widget-ghost-preview"
-        :style="{
-          position: 'absolute',
-          left: `${store.widgetDragState.position.x * 100}%`,
-          top: `${store.widgetDragState.position.y * 100}%`,
-          width: `${(store.widgetDragState.widget.defaultSize?.width ?? 0.2) * 100}%`,
-          height: `${(store.widgetDragState.widget.defaultSize?.height ?? 0.36) * 100}%`,
-          pointerEvents: 'none',
-          zIndex: 1000,
-          willChange: 'transform',
-        }"
-      >
-        <div
-          class="w-full h-full border-2 border-dashed border-[#ffffff21] bg-[#ffffff03] rounded-md shadow-sm"
-          style="backdrop-filter: blur(16px); will-change: transform"
-        >
-          <div class="w-full h-full bg-[#ffffff03] rounded-md" />
-        </div>
-      </div>
-      <template v-for="widget in view.widgets.slice().reverse()" :key="widget.hash">
+
+      <template v-for="widget in store.currentView.widgets.slice().reverse()" :key="widget.hash">
         <WidgetHugger
           v-if="componentExists(widget.component)"
           :widget="widget"

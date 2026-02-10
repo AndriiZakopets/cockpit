@@ -219,6 +219,56 @@ export const useVideoStore = defineStore('video', () => {
   }
 
   /**
+   * Deactivates a stream by closing its WebRTC connection and freeing resources.
+   * Must not be called while the stream is being recorded.
+   * @param {string} streamName - Unique name for the stream (external id)
+   */
+  const deactivateStream = (streamName: string): void => {
+    const streamData = activeStreams.value[streamName]
+    if (streamData === undefined) return
+    if (streamData.mediaRecorder !== undefined && streamData.mediaRecorder.state === 'recording') {
+      console.warn(`[Video] Cannot deactivate stream '${streamName}': recording in progress.`)
+      return
+    }
+    if (streamData.webRtcManager) {
+      try {
+        streamData.webRtcManager.close(`Stream '${streamName}' window closed`)
+        console.debug(`[Video] Closed WebRTC connection for stream '${streamName}'.`)
+      } catch (error) {
+        console.warn(`[Video] Error closing WebRTC for stream '${streamName}':`, error)
+      }
+    }
+    if (streamData.mediaStream) {
+      streamData.mediaStream.getTracks().forEach((track) => track.stop())
+    }
+    delete activeStreams.value[streamName]
+  }
+
+  /**
+   * Acquire a stream for display (e.g. video widget). Call releaseStream when the consumer is done.
+   * Ensures the WebRTC connection stays open while at least one consumer holds a reference.
+   * @param {string} streamName - Name of the stream (external id)
+   */
+  const acquireStream = (streamName: string): void => {
+    if (!streamName) return
+    if (activeStreams.value[streamName] === undefined) {
+      activateStream(streamName)
+    }
+  }
+
+  /**
+   * Release a stream previously acquired with acquireStream. When the last consumer releases
+   * and the stream is not recording, the WebRTC connection is closed to save traffic.
+   * @param {string} streamName - Name of the stream (external id)
+   */
+  const releaseStream = (streamName: string): void => {
+    if (!streamName) return
+    if (!isRecording(streamName)) {
+      deactivateStream(streamName)
+    }
+  }
+
+  /**
    * Get all data related to a given stream, if available
    * @param {string} streamName - Name of the stream
    * @returns {StreamData | undefined} The StreamData object, if available
@@ -846,6 +896,7 @@ export const useVideoStore = defineStore('video', () => {
         }
 
         delete activeStreams.value[externalId]
+        delete streamRefCounts[externalId]
         console.log(`Cleaned up all resources for external stream '${externalId}'`)
       }
 
@@ -902,6 +953,8 @@ export const useVideoStore = defineStore('video', () => {
     namessAvailableAbstractedStreams,
     externalStreamId,
     discardProcessedFilesFromVideoDB,
+    acquireStream,
+    releaseStream,
     getMediaStream,
     getStreamData,
     isRecording,

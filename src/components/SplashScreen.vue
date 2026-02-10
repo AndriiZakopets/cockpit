@@ -81,6 +81,7 @@
           :src="blueRoboticsWhiteNameLogo"
           alt="Blue Robotics Logo"
         />
+        <img class="absolute top-[5%] left-[18%] w-[15%] z-[9993]" :src="twoUXVLogo" alt="Blue Robotics Logo" />
       </div>
 
       <div
@@ -126,6 +127,7 @@ import { getMonth } from 'date-fns'
 
 import { useAppInterfaceStore } from '@/stores/appInterface'
 
+import twoUXVLogo from '../assets/2uxv.png'
 import blueRoboticsWhiteNameLogo from '../assets/blue-robotics-white-name-logo.png'
 import blueROV from '../assets/blueROV-front.png'
 import blueROVXmas from '../assets/blueROV-front-santa-hat.png'
@@ -134,7 +136,7 @@ import cockpitLogoName from '../assets/cockpit-name-logo.png'
 import fish from '../assets/fish-transparent.png'
 import lite from '../assets/lite.png'
 import xmasTree from '../assets/pulling-xmas-tree.gif'
-import splashBackground from '../assets/splash-background.png'
+import splashBackground from '../assets/splash-background.webp'
 import tether from '../assets/tether.png'
 import tetherXmas from '../assets/tether-xmas.png'
 
@@ -152,37 +154,37 @@ const randomLightHeartedMessage = ref<string>('')
 let timerId: ReturnType<typeof setTimeout>
 
 const startupLightHeartedMessages: string[] = [
-  'Distributing dolphins for sonar translations...',
-  'Observing octopuses to optimize dark mode...',
-  'Persuading Poseidon to trade us his trident...',
-  'Sailing the seas, in sync with the breeze...',
-  'Jiggling jellyfish to frost up the UI...',
-  'Corralling coral for calibration...',
-  'Languishing in life-jackets...',
-  'Salvaging shipwrecks...',
-  'Searching for Nemo...',
-  'Singing with whales...',
-  'Tuning harps for carp...',
-  'Stargazing with starfish...',
-  'Recharging electric eels...',
-  'Swaying at the seaweed disco...',
-  'Fencing in the swordfish showdown...',
-  'Assembling AUVs into a single-file line...',
-  'Polishing portholes for crystal-clear viewports...',
-  'Convincing crabs to stop double-clicking everything...',
-  'Syncing compass with the stars (hold still, Orion)...',
-  'Kowtowing to kelp for a greener UI theme...',
-  'Warming up thrusters — and the coffee machine...',
-  'Updating barnacle firmware — this might tickle...',
-  'Deploying rubber ducks for safety certification...',
-  'Filling ballast tanks with fresh ideas...',
-  'Mapping ocean puns… depth-level humor detected...',
-  'Rendering waves pixel by pixel — surf’s almost up...',
-  'Teaching seagulls the latest hover gestures...',
-  'Checking tide tables to schedule snack breaks...',
-  'Swapping batteries in the sea turtles (just kidding)...',
-  'Dusting off code gremlins  —  please keep arms inside the Cockpit...',
-  'Aligning gyros — because spin is only fun on dance floors...',
+  'Калібруємо НРК за компасом і здоровим глуздом...',
+  'Пояснюємо дрону, що «тут свої» — ще раз...',
+  'Навчаємо EKF не панікувати під РЕБ...',
+  'Синхронізуємо одометрію з реальністю...',
+  'Перевіряємо, чи це баг, чи особливість місцевості...',
+  'Вмовляємо IMU не фантазувати...',
+  'Шукаємо GPS там, де його вже давно немає...',
+  'Оптимізуємо маршрут, бо напряму — не варіант...',
+  'Пояснюємо роботу, що кущ — це не ворог...',
+  'Калібруємо камеру під українське небо...',
+  'Заспокоюємо автопілот: це не землетрус, це життя...',
+  'Перевіряємо, чи антену не «переїхала логістика»...',
+  'Зводимо фільтр Калмана з нервами...',
+  'Натягуємо Wi-Fi, як сову на глобус...',
+  'Переіменовуємо «test_final_v7_really_final»...',
+  'Навчаємо НРК їздити тихо і без пафосу...',
+  'Перевіряємо, чи ще є телеметрія, чи вже віра...',
+  'Синхронізуємо час — бо у війні він пливе...',
+  'Оптимізуємо CPU, бо зайвого тут нема...',
+  'Вмовляємо софт працювати без інтернету...',
+  'Розводимо кабелі, як мінні поля — обережно...',
+  'Перевіряємо, чи це шум, чи корисний сигнал...',
+  'Латаємо баги, поки батарея ще тримається...',
+  'Переконуємо контролер, що це не край світу...',
+  'Мапимо місцевість, якої нема на картах...',
+  'Тестуємо автономність — і власну теж...',
+  'Вирівнюємо гіроскоп, бо світ і так кривий...',
+  'Пояснюємо НРК, що швидко ≠ безпечно...',
+  'Чекаємо фікс, який «ось-ось»...',
+  'Збираємо телеметрію і трішки надії...',
+  'Калібруємо все. Знову...',
 ]
 
 const remainingMessages = ref<string[]>([...startupLightHeartedMessages])
